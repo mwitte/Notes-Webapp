@@ -1,0 +1,14 @@
+CACHE MANIFEST
+
+CACHE:
+# JS
+app/js/app.js
+
+# Styles
+app/css/styles.css
+
+# Images
+app/img/ajax-loader.gif
+
+
+NETWORK:
