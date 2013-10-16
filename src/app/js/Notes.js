@@ -100,7 +100,10 @@ var Notes = {
 			var newNote = Notes.createNoteFromFormData($(this).serializeArray());
 			Storage.storeEntityObject(Notes.vars.notesStorageKey, Notes.vars.identifier, newNote);
 			Notes.buildNotesList();
-			Navigation.showFirstContent(function(){ $(this).find('input, textarea').val(''); });
+			var form = $(this);
+			Navigation.showFirstContent(function(){
+				form.find('input, textarea').val('');
+			});
 			return false;
 		});
 

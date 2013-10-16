@@ -17,7 +17,9 @@ var Navigation = {
 		$('.container .content div.' + $(clickedElement).attr('data-content')).delay(300).fadeIn(300);
 		$('.footer').delay(300).fadeIn(300);
 		if(callback){
-			callback();
+			setTimeout(function() {
+				callback();
+			}, 300);
 		}
 	},
 	showFirstContent: function(callback){

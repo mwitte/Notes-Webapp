@@ -15,7 +15,7 @@ var Storage = {
 	removeEntityObject: function(key, property, object){
 		var result = 0;
 		var storedArray = Storage.restore(key);
-		if(typeof storedArray !== "undefined"){
+		if(typeof storedArray !== "undefined" && storedArray instanceof Array){
 			storedArray.forEach(function(storedElement, arrayKey){
 				if(storedElement[property] == object[property]){
 					storedArray.splice(arrayKey, 1);
@@ -36,7 +36,7 @@ var Storage = {
 	restoreEntityObjectByIdentifier: function(key, property, identifier){
 		var object = null;
 		var storedArray = Storage.restore(key);
-		if(typeof storedArray !== "undefined"){
+		if(typeof storedArray !== "undefined" && storedArray instanceof Array){
 			storedArray.forEach(function(storedElement, arrayKey){
 				if(storedElement[property] == identifier){
 					object = storedElement;
@@ -58,7 +58,7 @@ var Storage = {
 	storeEntityObject: function(key, property, object){
 		var result = 0;
 		var storedArray = Storage.restore(key);
-		if(typeof storedArray !== "undefined"){
+		if(typeof storedArray !== "undefined" && storedArray instanceof Array){
 			storedArray.forEach(function(storedElement, arrayKey){
 				if(storedElement[property] == object[property]){
 					storedArray[arrayKey] = object;
