@@ -16,12 +16,13 @@ var Storage = {
 		var result = 0;
 		var storedArray = Storage.restore(key);
 		if(typeof storedArray !== "undefined" && storedArray instanceof Array){
-			storedArray.forEach(function(storedElement, arrayKey){
+			for(var i=0; i < storedArray.length; i++){
+				var storedElement = storedArray[i];
 				if(storedElement[property] == object[property]){
-					storedArray.splice(arrayKey, 1);
+					storedArray.splice(i, 1);
 					result = 1;
 				}
-			});
+			}
 			Storage.store(key, storedArray);
 		}
 	},
@@ -37,12 +38,12 @@ var Storage = {
 		var object = null;
 		var storedArray = Storage.restore(key);
 		if(typeof storedArray !== "undefined" && storedArray instanceof Array){
-			storedArray.forEach(function(storedElement, arrayKey){
+			for(var i=0; i < storedArray.length; i++){
+				var storedElement = storedArray[i];
 				if(storedElement[property] == identifier){
 					object = storedElement;
-					//return object;
 				}
-			});
+			}
 		}
 		return object;
 	},
@@ -59,12 +60,14 @@ var Storage = {
 		var result = 0;
 		var storedArray = Storage.restore(key);
 		if(typeof storedArray !== "undefined" && storedArray instanceof Array){
-			storedArray.forEach(function(storedElement, arrayKey){
+			for(var i=0; i < storedArray.length; i++){
+				var storedElement = storedArray[i];
 				if(storedElement[property] == object[property]){
-					storedArray[arrayKey] = object;
+					// ad object to original array
+					storedArray[i] = object;
 					result = 1;
 				}
-			});
+			}
 			if(result == 0){
 				storedArray.push(object);
 			}

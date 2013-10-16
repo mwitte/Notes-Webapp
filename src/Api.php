@@ -1,11 +1,12 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: wittem
- * Date: 15.10.13
- * Time: 20:58
- * To change this template use File | Settings | File Templates.
+ * Created by Matthias Witte
+ *
+ * http://www.matthias-witte.net/
+ * 15.10.13
  */
+
+require_once 'classes/autoloader.php';
 
 class Api {
 
@@ -17,14 +18,16 @@ class Api {
 		foreach($notesData['notes'] as $note){
 			$newNotes[$note['id']] = $note;
 		}
-		$storedNotesJson = $this->readFromFile();
-		if($storedNotesJson){
+		try{
+			$storedNotesJson = $this->readFromFile();
 			$storedNotes = json_decode($storedNotesJson, true);
 			if(is_array($storedNotes)){
 				$newNotes = array_merge($storedNotes, $newNotes);
+				$this->writeToFile(json_encode($newNotes, true));
 			}
+		}catch (Exception $e){
 		}
-
+		return json_encode($newNotes, true);
 	}
 
 	protected function  writeToFile($content, $fileName = self::FILENAME){
@@ -38,8 +41,11 @@ class Api {
 	}
 	protected function readFromFile($fileName = self::FILENAME){
 		try{
+			$data = null;
 			$handle = fopen($fileName, 'r');
-			$data = fread($handle,filesize($fileName));
+			if(filesize($fileName) > 0){
+				$data = fread($handle,filesize($fileName));
+			}
 			return $data;
 		}catch (Exception $e){
 			return null;
@@ -47,4 +53,4 @@ class Api {
 	}
 }
 $api = new Api();
-$api->sync(file_get_contents('php://input'));
+echo $api->sync(file_get_contents('php://input'));
