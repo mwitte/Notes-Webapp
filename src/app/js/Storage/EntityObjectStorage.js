@@ -1,9 +1,6 @@
-/**
- * Wrapper for localStorage
- * @type {{store: Function, restore: Function, clear: Function}}
- */
-var Storage = {
-
+EntityObjectStorage.prototype = new SimpleStorage;
+function EntityObjectStorage(storageKey){
+	this.storageKey = storageKey;
 
 	/**
 	 * Restores an object from a stored array by
@@ -12,19 +9,20 @@ var Storage = {
 	 * @param property
 	 * @param identifier
 	 */
-	removeEntityObject: function(storeKey, property, object){
+	this.remove = function (object, property){
 		var result = 0;
-		var storedObjects = Storage.restore(storeKey);
+		var storedObjects = Storage.restore(this.storageKey);
 		if(typeof storedObjects !== "undefined" && storedObjects instanceof Object){
 			$.each(storedObjects, function( key, storedElement ) {
 				if(storedElement[property] == object[property]){
+					//storedObjects.splice(key, 1);
 					delete storedObjects[key];
 					result = 1;
 				}
 			});
-			Storage.store(storeKey, storedObjects);
+			Storage.store(this.storageKey, storedObjects);
 		}
-	},
+	}
 
 	/**
 	 * Restores an object from a stored array by
@@ -33,9 +31,9 @@ var Storage = {
 	 * @param property
 	 * @param identifier
 	 */
-	restoreEntityObjectByIdentifier: function(key, property, identifier){
+	restore = function(identifier, property){
 		var object = null;
-		var storedObjects = Storage.restore(key);
+		var storedObjects = Storage.restore(this.storageKey);
 		if(typeof storedObjects !== "undefined" && storedObjects instanceof Object){
 			$.each(storedObjects, function( key, storedElement ) {
 				if(storedElement[property] == identifier){
@@ -44,7 +42,7 @@ var Storage = {
 			});
 		}
 		return object;
-	},
+	}
 
 	/**
 	 * Stores an object in an array, if element is found by property's identifier, given object will
@@ -54,9 +52,9 @@ var Storage = {
 	 * @param property
 	 * @param object
 	 */
-	storeEntityObject: function(key, property, object){
+	this.store = function(object, property){
 		var result = 0;
-		var storedObjects = Storage.restore(key);
+		var storedObjects = Storage.restore(this.storageKey);
 		if(typeof storedObjects !== "undefined" && storedObjects instanceof Object){
 			$.each(storedObjects, function( key, storedElement ) {
 				if(storedElement[property] == object[property]){
@@ -71,35 +69,6 @@ var Storage = {
 		}else{
 			storedObjects = {0: object};
 		}
-		Storage.store(key, storedObjects);
-	},
-
-	/**
-	 * Stores data into the browser storage by key
-	 * @param key
-	 * @param data
-	 */
-	store: function (key, data){
-		localStorage[key] = JSON.stringify(data);
-	},
-
-	/**
-	 * Restores data from the browser storage by key
-	 * @param key
-	 * @param data
-	 */
-	restore: function(key){
-		if(typeof localStorage[key] !== "undefined"){
-			return JSON.parse(localStorage[key]);
-		}else{
-			return null;
-		}
-	},
-
-	/**
-	 * Clears the browser storage
-	 */
-	clear: function (){
-		localStorage.clear();
+		Storage.store(this.storageKey, storedObjects);
 	}
 }

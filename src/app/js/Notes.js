@@ -42,10 +42,9 @@ var Notes = {
 	 */
 	createNoteFromFormData: function(formData){
 		var newNote = {};
-		for(var i=0; i < formData.length; i++){
-			var element = formData[i];
-			newNote[element.name] = element.value;
-		}
+		$.each(formData, function( key, value ) {
+			newNote[key.name] = value.value;
+		});
 		newNote.changed = new Date().getTime();
 		// set an identifier if there isn't one
 		if(typeof newNote[Notes.vars.identifier] === "undefined" || newNote[Notes.vars.identifier].length == 0){
@@ -61,8 +60,7 @@ var Notes = {
 		$('.notesList').empty();
 		var storedNotes = Storage.restore(Notes.vars.notesStorageKey);
 		if(storedNotes){
-			for(var i=0; i < storedNotes.length; i++){
-				var storedNote = storedNotes[i];
+			$.each(storedNotes, function( key, storedNote ) {
 				var item = $("<a>", {'class': "list-group-item note"}).attr('data-content', storedNote[Notes.vars.identifier]);
 				var badge = $("<span>", {'class': "badge"}).append(new Date(storedNote.changed).toLocaleString());
 				if(typeof storedNote.title === "undefined" || storedNote.title.length == 0){
@@ -74,7 +72,7 @@ var Notes = {
 				}
 				item.append(badge);
 				$('.notesList').append(item);
-			}
+			});
 		}
 		Notes.bindEvents();
 	},
@@ -104,8 +102,7 @@ var Notes = {
 	bindEvents: function(){
 		$('.newNote form, .editNote form').unbind();
 		$('.newNote form, .editNote form').submit(function(){
-			var newNote = Notes.createNoteFromFormData($(this).serializeArray());
-			$('#debug').val(JSON.stringify(newNote));
+			var newNote = Notes.createNoteFromFormData($(this).serializeArray().toObject());
 			Storage.storeEntityObject(Notes.vars.notesStorageKey, Notes.vars.identifier, newNote);
 			Notes.buildNotesList();
 			var form = $(this);
